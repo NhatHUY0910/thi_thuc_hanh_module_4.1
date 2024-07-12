@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+</head>
+<body class="p-6">
+
+    <div class="max-w-6xl mx-auto bg-white p-8 rounded-1g shadow-md">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">Promotion List</h1>
+
+        <div class="mb-4 flex flex-col sm:flex-row justify-between items-center">
+            <form class="mb-4 sm:mb-0" th:action="@{/promotions}" method="get">
+                <label for="discountRate" class="block text-sm font-medium text-gray-700 mb-2">Search by Discount Rate:</label>
+                <div class="flex">
+                    <input type="number" id="discountRate" name="discountRate" step="0.01" min="0" max="5000"
+                           class="rounded-l-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    <button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-r-md">Search</button>
+                </div>
+            </form>
+
+            <a href="/promotions/create" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                <button>Add Promotion</button>
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Time</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">End Time</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Discount Rate</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                <tr th:each="promotion : ${promotions}">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${promotion.id}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${promotion.title}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(promotion.startTime, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(promotion.endTime, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${promotion.discountRate}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${promotion.details}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <a class="text-green-600 hover:text-green-900 mr-3" th:href="@{/promotions/update/{id}(id=${promotion.id})}">Update</a>
+                        <form th:action="@{/promotions/delete}" method="post" style="display: inline">
+                            <input type="hidden" name="id" th:value="${promotion.id}" />
+                            <button class="text-red-600 hover:text-red-900" type="submit" onclick="return confirm('Are you sure you want to delete this promotion?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
